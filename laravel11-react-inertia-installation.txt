@@ -1,0 +1,139 @@
+01. laravel new
+FILENAME: laravel11-react-inertia (Optional)
+
+> [none] No starter kit
+> [0] Pest
+02.[mysql  ] MySQL
+
+cd "YOUR FILENAME"
+
+03. npm i react react-dom
+04. npm install --save-dev @vitejs/plugin-react
+05. composer require inertiajs/inertia-Laravel
+06. rename the "welcome.blade.php" to app.blade.php
+
+===============================================
+https://inertiajs.com/server-side-setup
+===============================================
+Paste in your app.blade.php
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    @viteReactRefresh
+    @vite('resources/js/app.jsx')
+    @inertiaHead
+</head>
+
+<body>
+    @inertia
+</body>
+
+</html>
+
+
+==============================================
+07. php artisan inertia:middleware
+
+==============================================
+Add the code below in your bootstrap/app.php 
+==============================================
+
+use App\Http\Middleware\HandleInertiaRequests;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        HandleInertiaRequests::class,
+    ]);
+})
+
+===============================================
+https://inertiajs.com/client-side-setup
+===============================================
+08. npm install @inertiajs/react
+
+===============================================
+Paste in your app.js then rename the app.js to app.jsx
+===============================================
+import { createInertiaApp } from '@inertiajs/react'
+import { createRoot } from 'react-dom/client'
+
+createInertiaApp({
+  resolve: name => {
+    const pages = import.meta.glob('./Pages/**/*.jsx', { eager: true })
+    return pages[`./Pages/${name}.jsx`]
+  },
+  setup({ el, App, props }) {
+    createRoot(el).render(<App {...props} />)
+  },
+})
+
+09. got to vite.config.js and replace this code
+===============================================================
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import react from '@vitejs/plugin-react';
+ 
+export default defineConfig({
+    plugins: [
+        laravel(['resources/js/app.jsx']),
+        react(),
+    ],
+});
+=============================================================
+
+10. Create Pages folder in the resources/js
+11. in your "resources/js/Pages" create Home.jsx and paste the code beleow
+
+==================================================
+const Home = () => {
+  return (
+    <>
+        <h1>LARAVEL 11 REACT INERTIA</h1>
+    </>    
+  )
+}
+
+export default Home
+
+
+===================================================
+12. in your web.php copy the example route
+===========================================
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return inertia('Home');
+});
+===========================================
+
+13. NOTE: setup your database
+
+14. run two terminal
+php artisan serve
+npm run dev
+
+14. npm install -D tailwindcss postcss autoprefixer
+15. npx tailwindcss init -p
+=====================================================
+16. tailwind.config.js
+=======================================================
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./resources/**/*.blade.php",
+    "./resources/**/*.jsx",
+    "./resources/**/*.js",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
